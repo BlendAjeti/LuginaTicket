@@ -1,0 +1,58 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
+        </div>
+        <form class="mt-8 space-y-6" method="post" asp-action="Register" asp-controller="Account">
+            <div asp-validation-summary="All" class="text-red-600 mb-4"></div>
+            <div class="space-y-4">
+                <div>
+                    <label asp-for="FirstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                    <input asp-for="FirstName" type="text" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="FirstName" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="LastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input asp-for="LastName" type="text" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="LastName" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="Email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input asp-for="Email" type="email" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="Email" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="Password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input asp-for="Password" type="password" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="Password" class="text-red-600 text-sm"></span>
+                </div>
+                <div>
+                    <label asp-for="ConfirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" required class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <span asp-validation-for="ConfirmPassword" class="text-red-600 text-sm"></span>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Register
+                </button>
+            </div>
+
+            <div class="text-center">
+                <span class="text-sm text-gray-600">Already have an account? </span>
+                <a href="/Account/Login" class="font-medium text-indigo-600 hover:text-indigo-500">Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
