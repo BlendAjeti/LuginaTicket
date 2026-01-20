@@ -1,0 +1,66 @@
+@model List<Movie>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="mb-12">
+    <div class="relative h-96 bg-gray-800 rounded-lg overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-red-900/50 to-transparent z-10"></div>
+        <div class="relative z-20 h-full flex flex-col items-center justify-center text-center px-4">
+            <div class="mb-6">
+                <i class="fas fa-play-circle text-8xl text-white/30"></i>
+            </div>
+            <h1 class="text-5xl font-bold mb-4">The Best Streaming Experience</h1>
+            <p class="text-lg text-gray-300 max-w-2xl mb-8">
+                StreamVibe is the best streaming experience for watching your favorite movies and shows on demand, anytime, anywhere. 
+                With StreamVibe, you can enjoy a wide variety of content, including the latest blockbusters, classic movies, popular TV shows, and more.
+            </p>
+            <a href="/Movies" class="bg-red-600 hover:bg-red-700 px-8 py-3 rounded-lg text-white font-semibold flex items-center space-x-2">
+                <i class="fas fa-play"></i>
+                <span>Start Watching Now</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="mb-12">
+    <h2 class="text-3xl font-bold text-center mb-8">Top Films</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @foreach (var movie in Model)
+        {
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-transform cursor-pointer">
+                <a href="/Movies/Details/@movie.Id">
+                    @if (!string.IsNullOrEmpty(movie.PosterUrl))
+                    {
+                        <div class="aspect-[2/3] bg-gray-700 overflow-hidden">
+                            <img src="@movie.PosterUrl" alt="@movie.Title" class="w-full h-full object-cover" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="aspect-[2/3] bg-gray-700 flex items-center justify-center">
+                            <i class="fas fa-film text-6xl text-gray-600"></i>
+                        </div>
+                    }
+                    <div class="p-4 bg-red-600">
+                        <h3 class="font-bold text-white">@movie.Title</h3>
+                        <p class="text-sm text-red-100">Premiera: @movie.ReleaseDate.ToString("dd.MM.yyyy")</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="bg-gray-800 rounded-lg p-8 mb-12">
+    <div class="flex flex-col md:flex-row items-center justify-between">
+        <div>
+            <h2 class="text-3xl font-bold mb-2">Shiko filmin tend tani!</h2>
+            <p class="text-gray-300">This is a clear and concise call to action that encourages users to sign up for a free trial of StreamVibe.</p>
+        </div>
+        <a href="/Movies" class="mt-4 md:mt-0 bg-red-600 hover:bg-red-700 px-8 py-3 rounded-lg text-white font-semibold">
+            Rezervo Tani
+        </a>
+    </div>
+</div>
+
