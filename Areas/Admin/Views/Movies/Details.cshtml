@@ -1,0 +1,88 @@
+@model Movie
+@{
+    ViewData["Title"] = "Movie Details";
+}
+
+<h1 class="text-3xl font-bold mb-6">Movie Details</h1>
+
+<div class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    <dl class="grid grid-cols-2 gap-4">
+        <dt class="text-gray-400">Title:</dt>
+        <dd class="font-semibold">@Model.Title</dd>
+        
+        <dt class="text-gray-400">Genre:</dt>
+        <dd>@Model.Genre</dd>
+        
+        <dt class="text-gray-400">Description:</dt>
+        <dd>@Model.Description</dd>
+        
+        <dt class="text-gray-400">Duration:</dt>
+        <dd>@Model.Duration minutes</dd>
+        
+        <dt class="text-gray-400">Release Date:</dt>
+        <dd>@Model.ReleaseDate.ToString("MMM dd, yyyy")</dd>
+        
+        <dt class="text-gray-400">Director:</dt>
+        <dd>@Model.Director</dd>
+        
+        <dt class="text-gray-400">Actors:</dt>
+        <dd>@Model.Actors</dd>
+        
+        <dt class="text-gray-400">Status:</dt>
+        <dd>
+            <span class="px-2 py-1 rounded @(Model.IsActive ? "bg-green-600" : "bg-red-600")">
+                @(Model.IsActive ? "Active" : "Inactive")
+            </span>
+        </dd>
+    </dl>
+    
+    <div class="mt-6 flex gap-4">
+        <a href="/Admin/Movies/Edit/@Model.Id" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded text-white">Edit</a>
+        <a href="/Admin/Showtimes/Create?movieId=@Model.Id" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded text-white">Add Showtime</a>
+        <a href="/Admin/Movies" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white">Back to List</a>
+    </div>
+</div>
+
+@if (Model.Showtimes != null && Model.Showtimes.Any())
+{
+    <div class="mt-8">
+        <h2 class="text-2xl font-bold mb-4">Showtimes</h2>
+        <div class="bg-gray-800 rounded-lg p-6">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-700">
+                        <tr>
+                            <th class="px-4 py-3 text-left">Location</th>
+                            <th class="px-4 py-3 text-left">Date & Time</th>
+                            <th class="px-4 py-3 text-left">View Type</th>
+                            <th class="px-4 py-3 text-left">Price</th>
+                            <th class="px-4 py-3 text-left">Status</th>
+                            <th class="px-4 py-3 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var showtime in Model.Showtimes.OrderBy(s => s.ShowDateTime))
+                        {
+                            <tr class="border-t border-gray-700">
+                                <td class="px-4 py-3">@showtime.CinemaHall?.Name</td>
+                                <td class="px-4 py-3">@showtime.ShowDateTime.ToString("MMM dd, yyyy h:mm tt")</td>
+                                <td class="px-4 py-3">@showtime.ViewType</td>
+                                <td class="px-4 py-3">@showtime.Price.ToString("F2") €</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 rounded @(showtime.IsActive ? "bg-green-600" : "bg-red-600") text-white text-sm">
+                                        @(showtime.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <a href="/Admin/Showtimes/Edit/@showtime.Id" class="text-yellow-400 hover:underline mr-2">Edit</a>
+                                    <a href="/Admin/Showtimes/Delete/@showtime.Id" class="text-red-400 hover:underline">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
