@@ -1,0 +1,69 @@
+@model SettingsViewModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<h1 class="text-3xl font-bold mb-6">Settings</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="bg-green-600 text-white px-4 py-2 rounded mb-4">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-bold mb-4">Profile Information</h2>
+        <form asp-action="UpdateProfile" method="post">
+            <div class="mb-4">
+                <label asp-for="FirstName" class="block text-sm font-medium mb-2">First Name</label>
+                <input asp-for="FirstName" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+                <span asp-validation-for="FirstName" class="text-red-500 text-sm"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for="LastName" class="block text-sm font-medium mb-2">Last Name</label>
+                <input asp-for="LastName" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+                <span asp-validation-for="LastName" class="text-red-500 text-sm"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for="Email" class="block text-sm font-medium mb-2">Email</label>
+                <input asp-for="Email" type="email" disabled class="w-full bg-gray-600 border border-gray-600 rounded px-4 py-2 text-gray-400" />
+            </div>
+            <div class="mb-4">
+                <label asp-for="PhoneNumber" class="block text-sm font-medium mb-2">Phone Number</label>
+                <input asp-for="PhoneNumber" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+                <span asp-validation-for="PhoneNumber" class="text-red-500 text-sm"></span>
+            </div>
+            <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded">
+                Update Profile
+            </button>
+        </form>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-xl font-bold mb-4">Change Password</h2>
+        <form asp-action="ChangePassword" method="post">
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">Current Password</label>
+                <input type="password" name="CurrentPassword" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">New Password</label>
+                <input type="password" name="NewPassword" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">Confirm New Password</label>
+                <input type="password" name="ConfirmPassword" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+            </div>
+            <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded">
+                Change Password
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
