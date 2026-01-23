@@ -1,0 +1,64 @@
+@model Ticket
+@{
+    ViewData["Title"] = "Ticket";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket - @Model.TicketNumber</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-2xl mx-auto bg-gray-800 rounded-lg p-8">
+        <div class="grid grid-cols-3 gap-6">
+            <div>
+                <div class="aspect-[2/3] bg-gray-700 rounded mb-4 flex items-center justify-center">
+                    <i class="fas fa-film text-6xl text-gray-600"></i>
+                </div>
+            </div>
+            <div class="col-span-2">
+                <h2 class="text-2xl font-bold mb-4">@Model.Showtime.Movie.Title</h2>
+                <p class="text-gray-400 mb-2">@Model.Showtime.Movie.Genre</p>
+                <p class="text-sm text-gray-400 mb-2">
+                    <i class="fas fa-map-marker-alt"></i> @Model.Showtime.CinemaHall.Location
+                </p>
+                <p class="text-sm text-gray-400 mb-2">
+                    <i class="fas fa-calendar"></i> @Model.Showtime.ShowDateTime.ToString("ddd - MMM dd, yyyy - h:mm tt")
+                </p>
+                <p class="text-sm text-gray-400 mb-4">
+                    <i class="fas fa-video"></i> @Model.Showtime.ViewType view
+                </p>
+                <div class="grid grid-cols-3 gap-2 text-sm mb-4">
+                    <div>
+                        <p class="text-gray-400">SALLA</p>
+                        <p class="font-bold">@Model.Showtime.CinemaHall.Name</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400">ROW</p>
+                        <p class="font-bold">@Model.Seat.Row</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400">SEATS</p>
+                        <p class="font-bold">@Model.Seat.Number</p>
+                    </div>
+                </div>
+                <p class="text-gray-300 mb-4">Enjoy the best movie watching experience.</p>
+                <p class="text-red-500 mb-4">tiketmovies.com</p>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 pt-4 mt-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-red-600 p-4 rounded">
+                    <div class="text-white font-mono text-sm">@Model.Barcode</div>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">Scan this barcode at the entrance to the auditorium.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

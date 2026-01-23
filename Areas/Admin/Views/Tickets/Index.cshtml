@@ -1,0 +1,70 @@
+@model List<Ticket>
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+<h1 class="text-3xl font-bold mb-6">Tickets</h1>
+
+<div class="mb-4 flex gap-4">
+    <form method="get" class="flex gap-4">
+        <input type="text" name="search" value="@ViewBag.Search" placeholder="Search..." 
+               class="bg-gray-800 border border-gray-700 rounded px-4 py-2" />
+        <select name="status" class="bg-gray-800 border border-gray-700 rounded px-4 py-2">
+            <option value="">All Statuses</option>
+            @foreach (var status in ViewBag.Statuses as List<TicketStatus> ?? new List<TicketStatus>())
+            {
+                <option value="@status" selected="@(ViewBag.Status == status.ToString())">@status</option>
+            }
+        </select>
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded">Filter</button>
+    </form>
+</div>
+
+<div class="bg-gray-800 rounded-lg overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-700">
+            <tr>
+                <th class="px-4 py-3 text-left">Ticket Number</th>
+                <th class="px-4 py-3 text-left">User</th>
+                <th class="px-4 py-3 text-left">Movie</th>
+                <th class="px-4 py-3 text-left">Showtime</th>
+                <th class="px-4 py-3 text-left">Price</th>
+                <th class="px-4 py-3 text-left">Status</th>
+                <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in Model)
+            {
+                <tr class="border-t border-gray-700">
+                    <td class="px-4 py-3">@ticket.TicketNumber</td>
+                    <td class="px-4 py-3">@ticket.User?.UserName</td>
+                    <td class="px-4 py-3">@ticket.Showtime.Movie.Title</td>
+                    <td class="px-4 py-3">@ticket.Showtime.ShowDateTime.ToString("MMM dd, yyyy h:mm tt")</td>
+                    <td class="px-4 py-3">@ticket.Price.ToString("F2") €</td>
+                    <td class="px-4 py-3">@ticket.Status</td>
+                    <td class="px-4 py-3">
+                        <a href="/Admin/Tickets/Details/@ticket.Id" class="text-blue-400 hover:underline mr-2">Details</a>
+                        <a href="/Admin/Tickets/Edit/@ticket.Id" class="text-yellow-400 hover:underline mr-2">Edit</a>
+                        <a href="/Admin/Tickets/ViewTicket/@ticket.Id" class="text-green-400 hover:underline mr-2" target="_blank">View</a>
+                        <a href="/Admin/Tickets/Delete/@ticket.Id" class="text-red-400 hover:underline">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="flex justify-center gap-2 mt-4">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a href="?page=@i&search=@ViewBag.Search&status=@ViewBag.Status" 
+               class="px-4 py-2 rounded @(ViewBag.CurrentPage == i ? "bg-red-600" : "bg-gray-800")">
+                @i
+            </a>
+        }
+    </div>
+}
+

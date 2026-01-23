@@ -1,0 +1,41 @@
+@model Ticket
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+
+<h1 class="text-3xl font-bold mb-6">Ticket Details</h1>
+
+<div class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    <dl class="grid grid-cols-2 gap-4">
+        <dt class="text-gray-400">Ticket Number:</dt>
+        <dd class="font-semibold">@Model.TicketNumber</dd>
+        
+        <dt class="text-gray-400">User:</dt>
+        <dd>@Model.User?.UserName</dd>
+        
+        <dt class="text-gray-400">Movie:</dt>
+        <dd>@Model.Showtime.Movie.Title</dd>
+        
+        <dt class="text-gray-400">Showtime:</dt>
+        <dd>@Model.Showtime.ShowDateTime.ToString("MMM dd, yyyy h:mm tt")</dd>
+        
+        <dt class="text-gray-400">Seat:</dt>
+        <dd>Row @Model.Seat.Row, Seat @Model.Seat.Number</dd>
+        
+        <dt class="text-gray-400">Price:</dt>
+        <dd>@Model.Price.ToString("F2") €</dd>
+        
+        <dt class="text-gray-400">Status:</dt>
+        <dd>@Model.Status</dd>
+        
+        <dt class="text-gray-400">Purchase Date:</dt>
+        <dd>@Model.PurchaseDate.ToString("MMM dd, yyyy")</dd>
+    </dl>
+    
+    <div class="mt-6 flex gap-4">
+        <a href="/Admin/Tickets/Edit/@Model.Id" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded">Edit</a>
+        <a href="/Admin/Tickets/ViewTicket/@Model.Id" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded" target="_blank">View Ticket</a>
+        <a href="/Admin/Tickets" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded">Back to List</a>
+    </div>
+</div>
+
