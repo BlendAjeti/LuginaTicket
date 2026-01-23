@@ -1,0 +1,68 @@
+@model List<Movie>
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Movies</h1>
+    <a href="/Admin/Movies/Create" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded">Create New</a>
+</div>
+
+<div class="mb-4 flex gap-4">
+    <form method="get" class="flex gap-4">
+        <input type="text" name="search" value="@ViewBag.Search" placeholder="Search..." 
+               class="bg-gray-800 border border-gray-700 rounded px-4 py-2" />
+        <select name="genre" class="bg-gray-800 border border-gray-700 rounded px-4 py-2">
+            <option value="">All Genres</option>
+        </select>
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded">Filter</button>
+    </form>
+</div>
+
+<div class="bg-gray-800 rounded-lg overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-700">
+            <tr>
+                <th class="px-4 py-3 text-left">Title</th>
+                <th class="px-4 py-3 text-left">Genre</th>
+                <th class="px-4 py-3 text-left">Release Date</th>
+                <th class="px-4 py-3 text-left">Status</th>
+                <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model)
+            {
+                <tr class="border-t border-gray-700">
+                    <td class="px-4 py-3">@movie.Title</td>
+                    <td class="px-4 py-3">@movie.Genre</td>
+                    <td class="px-4 py-3">@movie.ReleaseDate.ToString("MMM dd, yyyy")</td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-1 rounded @(movie.IsActive ? "bg-green-600" : "bg-red-600")">
+                            @(movie.IsActive ? "Active" : "Inactive")
+                        </span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <a href="/Admin/Movies/Details/@movie.Id" class="text-blue-400 hover:underline mr-2">Details</a>
+                        <a href="/Admin/Movies/Edit/@movie.Id" class="text-yellow-400 hover:underline mr-2">Edit</a>
+                        <a href="/Admin/Movies/Delete/@movie.Id" class="text-red-400 hover:underline">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="flex justify-center gap-2 mt-4">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a href="?page=@i&search=@ViewBag.Search&genre=@ViewBag.Genre" 
+               class="px-4 py-2 rounded @(ViewBag.CurrentPage == i ? "bg-red-600" : "bg-gray-800")">
+                @i
+            </a>
+        }
+    </div>
+}
+
