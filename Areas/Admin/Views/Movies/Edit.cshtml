@@ -1,0 +1,84 @@
+@model Movie
+@{
+    ViewData["Title"] = "Edit Movie";
+}
+
+<h1 class="text-3xl font-bold mb-6">Edit Movie</h1>
+
+<form asp-action="Edit" method="post" class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-4">
+        <label asp-for="Title" class="block text-sm font-medium mb-2 text-white">Title</label>
+        <input asp-for="Title" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+        <span asp-validation-for="Title" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Description" class="block text-sm font-medium mb-2 text-white">Description</label>
+        <textarea asp-for="Description" rows="5" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white"></textarea>
+        <span asp-validation-for="Description" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Genre" class="block text-sm font-medium mb-2 text-white">Genre</label>
+        <input asp-for="Genre" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+        <span asp-validation-for="Genre" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+            <label asp-for="Duration" class="block text-sm font-medium mb-2 text-white">Duration (minutes)</label>
+            <input asp-for="Duration" type="number" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+            <span asp-validation-for="Duration" class="text-red-500 text-sm"></span>
+        </div>
+        <div>
+            <label asp-for="ReleaseDate" class="block text-sm font-medium mb-2 text-white">Release Date</label>
+            <input asp-for="ReleaseDate" type="date" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+            <span asp-validation-for="ReleaseDate" class="text-red-500 text-sm"></span>
+        </div>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Director" class="block text-sm font-medium mb-2 text-white">Director</label>
+        <input asp-for="Director" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+        <span asp-validation-for="Director" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Actors" class="block text-sm font-medium mb-2 text-white">Actors</label>
+        <input asp-for="Actors" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+        <span asp-validation-for="Actors" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Distributor" class="block text-sm font-medium mb-2 text-white">Distributor</label>
+        <input asp-for="Distributor" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+        <span asp-validation-for="Distributor" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="PosterUrl" class="block text-sm font-medium mb-2 text-white">Poster URL (Optional)</label>
+        <input asp-for="PosterUrl" type="url" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+        <span asp-validation-for="PosterUrl" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="TrailerUrl" class="block text-sm font-medium mb-2 text-white">Trailer URL (Optional)</label>
+        <input asp-for="TrailerUrl" type="url" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+        <span asp-validation-for="TrailerUrl" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label class="flex items-center">
+            <input asp-for="IsActive" type="checkbox" class="mr-2" />
+            <span class="text-white">Is Active</span>
+        </label>
+    </div>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-4 p-3 bg-red-900/20 border border-red-600 rounded">
+            <div asp-validation-summary="All" class="text-red-400 text-sm"></div>
+        </div>
+    }
+    <div class="flex gap-4">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-semibold">Save</button>
+        <a href="/Admin/Movies" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white font-semibold">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
