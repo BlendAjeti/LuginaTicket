@@ -1,0 +1,68 @@
+@model List<CinemaHall>
+@{
+    ViewData["Title"] = "Cinema Halls";
+}
+
+<h1 class="text-3xl font-bold mb-6">Cinema Halls (Lokacionet)</h1>
+
+<div class="mb-4 flex gap-4 items-center">
+    <form method="get" class="flex-1">
+        <input type="text" name="search" value="@ViewBag.Search" placeholder="Search by name or location..." 
+               class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+    </form>
+    <a href="/Admin/CinemaHalls/Create" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded text-white font-semibold">
+        Add New Location
+    </a>
+</div>
+
+<div class="bg-gray-800 rounded-lg overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-700">
+            <tr>
+                <th class="px-4 py-3 text-left">Name</th>
+                <th class="px-4 py-3 text-left">Location</th>
+                <th class="px-4 py-3 text-left">Rows</th>
+                <th class="px-4 py-3 text-left">Seats per Row</th>
+                <th class="px-4 py-3 text-left">Total Seats</th>
+                <th class="px-4 py-3 text-left">Status</th>
+                <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var hall in Model)
+            {
+                <tr class="border-t border-gray-700">
+                    <td class="px-4 py-3">@hall.Name</td>
+                    <td class="px-4 py-3">@hall.Location</td>
+                    <td class="px-4 py-3">@hall.TotalRows</td>
+                    <td class="px-4 py-3">@hall.SeatsPerRow</td>
+                    <td class="px-4 py-3">@(hall.TotalRows * hall.SeatsPerRow)</td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-1 rounded @(hall.IsActive ? "bg-green-600" : "bg-red-600") text-white text-sm">
+                            @(hall.IsActive ? "Active" : "Inactive")
+                        </span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <a href="/Admin/CinemaHalls/Details/@hall.Id" class="text-blue-400 hover:underline mr-2">Details</a>
+                        <a href="/Admin/CinemaHalls/Edit/@hall.Id" class="text-yellow-400 hover:underline mr-2">Edit</a>
+                        <a href="/Admin/CinemaHalls/Delete/@hall.Id" class="text-red-400 hover:underline">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="flex justify-center gap-2 mt-4">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a href="?page=@i&search=@ViewBag.Search" 
+               class="px-4 py-2 rounded @(ViewBag.CurrentPage == i ? "bg-red-600" : "bg-gray-700") text-white">
+                @i
+            </a>
+        }
+    </div>
+}
+

@@ -1,0 +1,54 @@
+@model CinemaHall
+@{
+    ViewData["Title"] = "Cinema Hall Details";
+}
+
+<h1 class="text-3xl font-bold mb-6">Cinema Hall Details</h1>
+
+<div class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    <dl class="grid grid-cols-2 gap-4">
+        <dt class="text-gray-400">Name:</dt>
+        <dd class="font-semibold">@Model.Name</dd>
+        
+        <dt class="text-gray-400">Location:</dt>
+        <dd>@Model.Location</dd>
+        
+        <dt class="text-gray-400">Total Rows:</dt>
+        <dd>@Model.TotalRows</dd>
+        
+        <dt class="text-gray-400">Seats per Row:</dt>
+        <dd>@Model.SeatsPerRow</dd>
+        
+        <dt class="text-gray-400">Total Seats:</dt>
+        <dd>@(Model.TotalRows * Model.SeatsPerRow)</dd>
+        
+        <dt class="text-gray-400">Status:</dt>
+        <dd>
+            <span class="px-2 py-1 rounded @(Model.IsActive ? "bg-green-600" : "bg-red-600") text-white text-sm">
+                @(Model.IsActive ? "Active" : "Inactive")
+            </span>
+        </dd>
+    </dl>
+    
+    @if (Model.Showtimes != null && Model.Showtimes.Any())
+    {
+        <div class="mt-6">
+            <h3 class="text-xl font-bold mb-4">Showtimes (@Model.Showtimes.Count)</h3>
+            <div class="space-y-2">
+                @foreach (var showtime in Model.Showtimes.OrderBy(s => s.ShowDateTime))
+                {
+                    <div class="bg-gray-700 rounded p-3">
+                        <p class="font-semibold">@showtime.Movie?.Title</p>
+                        <p class="text-sm text-gray-400">@showtime.ShowDateTime.ToString("MMM dd, yyyy h:mm tt") - @showtime.ViewType</p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    
+    <div class="mt-6 flex gap-4">
+        <a href="/Admin/CinemaHalls/Edit/@Model.Id" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded text-white">Edit</a>
+        <a href="/Admin/CinemaHalls" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white">Back to List</a>
+    </div>
+</div>
+

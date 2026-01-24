@@ -1,0 +1,60 @@
+@model CinemaHall
+@{
+    ViewData["Title"] = "Edit Cinema Hall";
+}
+
+<h1 class="text-3xl font-bold mb-6">Edit Cinema Hall</h1>
+
+<form asp-action="Edit" method="post" class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-4 p-3 bg-red-900/20 border border-red-600 rounded">
+            <div asp-validation-summary="All" class="text-red-400 text-sm"></div>
+        </div>
+    }
+    
+    <div class="mb-4">
+        <label asp-for="Name" class="block text-sm font-medium mb-2 text-white">Emri i Sallës</label>
+        <input asp-for="Name" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+        <span asp-validation-for="Name" class="text-red-500 text-sm"></span>
+    </div>
+    
+    <div class="mb-4">
+        <label asp-for="Location" class="block text-sm font-medium mb-2 text-white">Lokacioni</label>
+        <input asp-for="Location" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+        <span asp-validation-for="Location" class="text-red-500 text-sm"></span>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+            <label asp-for="TotalRows" class="block text-sm font-medium mb-2 text-white">Numri i Rreshtave</label>
+            <input asp-for="TotalRows" type="number" min="1" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+            <span asp-validation-for="TotalRows" class="text-red-500 text-sm"></span>
+        </div>
+        <div>
+            <label asp-for="SeatsPerRow" class="block text-sm font-medium mb-2 text-white">Vende për Rresht</label>
+            <input asp-for="SeatsPerRow" type="number" min="1" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+            <span asp-validation-for="SeatsPerRow" class="text-red-500 text-sm"></span>
+        </div>
+    </div>
+    
+    <div class="mb-4">
+        <label class="flex items-center">
+            <input asp-for="IsActive" type="checkbox" class="mr-2" />
+            <span class="text-white">Is Active</span>
+        </label>
+    </div>
+    
+    <div class="flex gap-4">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-semibold">Save</button>
+        <a href="/Admin/CinemaHalls" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white font-semibold">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
