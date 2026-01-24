@@ -1,0 +1,159 @@
+@model List<Ticket>
+@{
+    ViewData["Title"] = "Ticket Confirmation";
+    var ticket = Model.FirstOrDefault();
+}
+
+@if (ticket != null)
+{
+    <div class="max-w-4xl mx-auto">
+        <div id="ticketContent" class="bg-gray-800 rounded-lg p-8 border-2 border-dashed border-gray-600">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-1">
+                    @if (!string.IsNullOrEmpty(ticket.Showtime.Movie.PosterUrl))
+                    {
+                        <div class="aspect-[2/3] bg-gray-700 rounded mb-4 overflow-hidden">
+                            <img src="@ticket.Showtime.Movie.PosterUrl" alt="@ticket.Showtime.Movie.Title" class="w-full h-full object-cover" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="aspect-[2/3] bg-gray-700 rounded mb-4 flex items-center justify-center">
+                            <i class="fas fa-film text-6xl text-gray-600"></i>
+                        </div>
+                    }
+                </div>
+                
+                <div class="md:col-span-2">
+                    <h2 class="text-2xl font-bold mb-4">@ticket.Showtime.Movie.Title - @ticket.Showtime.Movie.Genre</h2>
+                    <p class="text-gray-400 mb-2">
+                        <i class="fas fa-map-marker-alt"></i> @ticket.Showtime.CinemaHall.Location
+                    </p>
+                    <p class="text-gray-400 mb-2">
+                        <i class="fas fa-calendar"></i> @ticket.Showtime.ShowDateTime.ToString("ddd - MMM dd, yyyy - h:mm tt")
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        <i class="fas fa-video"></i> @ticket.Showtime.ViewType view
+                    </p>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">SALLA</p>
+                            <p class="font-bold">@ticket.Showtime.CinemaHall.Name</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">ROW</p>
+                            <p class="font-bold">@ticket.Seat.Row</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">SEATS</p>
+                            <p class="font-bold">@string.Join(", ", Model.Select(t => t.Seat.Number))</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-4">Enjoy the best movie watching experience.</p>
+                    <p class="text-red-500 mb-4">tiketmovies.com</p>
+                    
+                    <div class="flex gap-4">
+                        <button id="shareBtn" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white">Share</button>
+                        <button id="downloadBtn" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white">Download PDF</button>
+                    </div>
+                    
+                    <div id="shareMessage" class="hidden mt-2 text-green-400 text-sm">Link copied to clipboard!</div>
+                </div>
+                
+                <div class="md:col-span-3 border-t border-gray-700 pt-4">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-red-600 p-4 rounded">
+                            <div class="text-white font-mono text-sm" id="barcode">@ticket.Barcode</div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400">Scan this barcode at the entrance to the auditorium.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Share button - copy link to clipboard
+        document.getElementById('shareBtn').addEventListener('click', function() {
+            const currentUrl = window.location.href;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(currentUrl).then(function() {
+                    const message = document.getElementById('shareMessage');
+                    message.classList.remove('hidden');
+                    setTimeout(function() {
+                        message.classList.add('hidden');
+                    }, 2000);
+                }).catch(function(err) {
+                    console.error('Failed to copy: ', err);
+                    fallbackCopyTextToClipboard(currentUrl);
+                });
+            } else {
+                fallbackCopyTextToClipboard(currentUrl);
+            }
+        });
+        
+        // Fallback for older browsers
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const message = document.getElementById('shareMessage');
+                    message.classList.remove('hidden');
+                    setTimeout(function() {
+                        message.classList.add('hidden');
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
+        
+        // Download button - download ticket as image
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const ticketContent = document.getElementById('ticketContent');
+            const button = this;
+            const originalText = button.textContent;
+            
+            button.disabled = true;
+            button.textContent = 'Downloading...';
+            
+            html2canvas(ticketContent, {
+                backgroundColor: '#1f2937',
+                scale: 2,
+                useCORS: true,
+                logging: false
+            }).then(function(canvas) {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'ticket-' + Date.now() + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                button.disabled = false;
+                button.textContent = originalText;
+            }).catch(function(err) {
+                console.error('Failed to generate image: ', err);
+                button.disabled = false;
+                button.textContent = originalText;
+                alert('Failed to download ticket. Please try again.');
+            });
+        });
+    </script>
+}

@@ -1,0 +1,67 @@
+@model List<Ticket>
+@{
+    ViewData["Title"] = "My Tickets";
+}
+
+<h1 class="text-3xl font-bold mb-6">My Tickets</h1>
+
+@if (Model.Any())
+{
+    <div class="grid grid-cols-1 gap-6">
+        @foreach (var ticket in Model)
+        {
+            <div class="bg-gray-800 rounded-lg p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                @if (!string.IsNullOrEmpty(ticket.Showtime.Movie.PosterUrl))
+                {
+                    <div class="aspect-[2/3] bg-gray-700 rounded flex-shrink-0 w-32 overflow-hidden">
+                        <img src="@ticket.Showtime.Movie.PosterUrl" alt="@ticket.Showtime.Movie.Title" class="w-full h-full object-cover" />
+                    </div>
+                }
+                else
+                {
+                    <div class="aspect-[2/3] bg-gray-700 rounded flex-shrink-0 w-32 flex items-center justify-center">
+                        <i class="fas fa-film text-4xl text-gray-600"></i>
+                    </div>
+                }
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold mb-2">@ticket.Showtime.Movie.Title</h3>
+                    <p class="text-gray-400 mb-2">@ticket.Showtime.Movie.Genre</p>
+                    <p class="text-sm text-gray-400 mb-2">
+                        <i class="fas fa-map-marker-alt"></i> @ticket.Showtime.CinemaHall.Location
+                    </p>
+                    <p class="text-sm text-gray-400 mb-2">
+                        <i class="fas fa-calendar"></i> @ticket.Showtime.ShowDateTime.ToString("ddd, MMM dd, yyyy • h:mm tt")
+                    </p>
+                    <p class="text-sm text-gray-400 mb-2">
+                        <i class="fas fa-video"></i> @ticket.Showtime.ViewType view
+                    </p>
+                    <p class="text-sm text-gray-400 mb-2">
+                        Row: @ticket.Seat.Row, Seat: @ticket.Seat.Number
+                    </p>
+                    <p class="text-sm font-semibold mb-4">Price: @ticket.Price.ToString("F2") €</p>
+                    <div class="flex gap-2">
+                        <a href="/Booking/TicketConfirmation?ticketIds=@ticket.Id" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm">
+                            View Details
+                        </a>
+                        <span class="px-4 py-2 bg-gray-700 rounded text-sm">
+                            @ticket.Status
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-12">
+        <i class="fas fa-ticket-alt text-6xl text-gray-600 mb-4"></i>
+        <p class="text-gray-400 text-lg">You haven't purchased any tickets yet.</p>
+        <a href="/Movies" class="inline-block mt-4 bg-red-600 hover:bg-red-700 px-6 py-3 rounded">
+            Browse Movies
+        </a>
+    </div>
+}
+

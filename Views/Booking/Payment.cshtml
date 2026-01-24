@@ -1,0 +1,251 @@
+@model Showtime
+@{
+    ViewData["Title"] = "Payment";
+    var seats = ViewBag.Seats as List<LuginaTicket.Models.Seat> ?? new List<LuginaTicket.Models.Seat>();
+    var totalPrice = ViewBag.TotalPrice as decimal? ?? 0;
+}
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-gray-800 rounded-lg p-8">
+        <h2 class="text-3xl font-bold mb-6">Put your card</h2>
+        <form id="paymentForm" method="post" action="/Booking/ProcessPayment">
+            @Html.AntiForgeryToken()
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="mb-4 p-3 bg-red-900/20 border border-red-600 rounded">
+                    <div asp-validation-summary="All" class="text-red-400 text-sm"></div>
+                </div>
+            }
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2 text-white">Card Number</label>
+                <input type="text" name="CardNumber" id="cardNumber" maxlength="19" 
+                       placeholder="4321 4321 4321 4321" 
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+                <span class="text-red-500 text-sm hidden" id="cardError"></span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-white">Exp. Date</label>
+                    <input type="month" name="ExpiryDate" id="expiryDate" 
+                           class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+                    <span class="text-red-500 text-sm hidden" id="expiryError"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-white">CVC</label>
+                    <input type="text" name="CVC" maxlength="3" 
+                           placeholder="123" 
+                           class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2 text-white">Name on Card</label>
+                <input type="text" name="NameOnCard" 
+                       placeholder="John Doe" 
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2 text-white">Street Address</label>
+                <input type="text" name="StreetAddress" 
+                       placeholder="123 Main Street" 
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-white">City</label>
+                    <input type="text" name="City" 
+                           placeholder="City" 
+                           class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-white">ZIP / Postal Code</label>
+                    <input type="text" name="ZipCode" 
+                           placeholder="10001" 
+                           class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2 text-white">Country or Region</label>
+                <select name="Country" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required>
+                    <option value="">Select Country</option>
+                    <option value="Afghanistan">Afghanistan</option>
+                    <option value="Albania">Albania</option>
+                    <option value="Algeria">Algeria</option>
+                    <option value="Argentina">Argentina</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Austria">Austria</option>
+                    <option value="Bangladesh">Bangladesh</option>
+                    <option value="Belgium">Belgium</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Bulgaria">Bulgaria</option>
+                    <option value="Canada">Canada</option>
+                    <option value="China">China</option>
+                    <option value="Colombia">Colombia</option>
+                    <option value="Croatia">Croatia</option>
+                    <option value="Czech Republic">Czech Republic</option>
+                    <option value="Denmark">Denmark</option>
+                    <option value="Egypt">Egypt</option>
+                    <option value="Finland">Finland</option>
+                    <option value="France">France</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Greece">Greece</option>
+                    <option value="Hungary">Hungary</option>
+                    <option value="India">India</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Ireland">Ireland</option>
+                    <option value="Israel">Israel</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Kosovo">Kosovo</option>
+                    <option value="Malaysia">Malaysia</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="Netherlands">Netherlands</option>
+                    <option value="New Zealand">New Zealand</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Norway">Norway</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Philippines">Philippines</option>
+                    <option value="Poland">Poland</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Romania">Romania</option>
+                    <option value="Russia">Russia</option>
+                    <option value="Saudi Arabia">Saudi Arabia</option>
+                    <option value="Serbia">Serbia</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="South Korea">South Korea</option>
+                    <option value="Spain">Spain</option>
+                    <option value="Sweden">Sweden</option>
+                    <option value="Switzerland">Switzerland</option>
+                    <option value="Thailand">Thailand</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="Ukraine">Ukraine</option>
+                    <option value="United Arab Emirates">United Arab Emirates</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                    <option value="Vietnam">Vietnam</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2 text-white">Phone Number (Optional)</label>
+                <input type="tel" name="PhoneNumber" 
+                       placeholder="+1 234 567 8900" 
+                       class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" />
+            </div>
+            <div class="mb-6">
+                <label class="flex items-center">
+                    <input type="checkbox" checked class="mr-2" />
+                    <span class="text-sm text-white">Securely save my information for 1-click checkout</span>
+                </label>
+            </div>
+            <button type="submit" id="payBtn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg">
+                Pay
+            </button>
+            <p class="text-xs text-gray-400 mt-4 text-center">
+                By confirming your subscription, you allow The Outdoor Inn Crowd Limited to charge your card for this payment and future payments in accordance with their terms. You can always cancel your subscription.
+            </p>
+        </form>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-6">
+        <div class="aspect-[2/3] bg-gray-700 rounded mb-4 flex items-center justify-center">
+            <i class="fas fa-film text-6xl text-gray-600"></i>
+        </div>
+        <h3 class="font-bold mb-2">@Model.Movie.Title - @Model.Movie.Genre</h3>
+        <p class="text-sm text-gray-400 mb-2">
+            <i class="fas fa-map-marker-alt"></i> @Model.CinemaHall.Location
+        </p>
+        <p class="text-sm text-gray-400 mb-2">
+            <i class="fas fa-calendar"></i> @Model.ShowDateTime.ToString("ddd • MMM dd, yyyy • h:mm tt")
+        </p>
+        <p class="text-sm text-gray-400 mb-4">
+            <i class="fas fa-video"></i> @Model.ViewType view
+        </p>
+        <div class="border-t border-gray-700 pt-4 mb-4">
+            <div class="grid grid-cols-3 gap-2 text-sm mb-4">
+                <div>
+                    <p class="text-gray-400">SALLA</p>
+                    <p class="font-bold">@Model.CinemaHall.Name</p>
+                </div>
+                <div>
+                    <p class="text-gray-400">ROW</p>
+                    <p class="font-bold">@(seats.FirstOrDefault()?.Row ?? "-")</p>
+                </div>
+                <div>
+                    <p class="text-gray-400">SEATS</p>
+                    <p class="font-bold">@string.Join(", ", seats.Select(s => s.Number))</p>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 pt-4">
+            <p class="text-sm text-gray-400 mb-1">Çmimi normal: @seats.Count X @Model.Price.ToString("F2") €</p>
+            <p class="text-xl font-bold">SHUMA TOTALE: @totalPrice.ToString("F2") €</p>
+        </div>
+    </div>
+</div>
+
+<div id="loader" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-gray-800 rounded-lg p-8 text-center">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600 mx-auto mb-4"></div>
+        <p class="text-white text-lg">Processing payment...</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+        $('#cardNumber').on('input', function() {
+            let value = $(this).val().replace(/\s/g, '');
+            let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+            $(this).val(formatted);
+        });
+
+        $('#paymentForm').submit(function(e) {
+            e.preventDefault();
+            
+            const cardNumber = $('#cardNumber').val().replace(/\s/g, '').replace(/-/g, '');
+            const expiryDateStr = $('#expiryDate').val();
+            
+            // Validate card number (16 digits)
+            if (!cardNumber || cardNumber.length !== 16 || !/^\d+$/.test(cardNumber)) {
+                $('#cardError').text('Card number must be 16 digits.').removeClass('hidden');
+                $('#cardNumber').focus();
+                return false;
+            }
+            
+            // Validate expiry date
+            if (!expiryDateStr) {
+                $('#expiryError').text('Expiry date is required.').removeClass('hidden');
+                $('#expiryDate').focus();
+                return false;
+            }
+            
+            const expiryDate = new Date(expiryDateStr + '-01');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (expiryDate < today) {
+                $('#expiryError').text('Card has expired.').removeClass('hidden');
+                $('#expiryDate').focus();
+                return false;
+            }
+            
+            // Clear errors
+            $('#cardError').addClass('hidden');
+            $('#expiryError').addClass('hidden');
+            
+            // Show loader
+            $('#loader').removeClass('hidden');
+            $('#payBtn').prop('disabled', true).text('Processing...');
+            
+            // Submit form after validation
+            setTimeout(() => {
+                $('#paymentForm')[0].submit();
+            }, 1500);
+            
+            return false;
+        });
+        });
+    </script>
+}
+
