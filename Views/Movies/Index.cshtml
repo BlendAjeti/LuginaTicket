@@ -1,0 +1,70 @@
+@model List<Movie>
+@{
+    ViewData["Title"] = "Movies & Shows";
+}
+
+<div class="mb-6">
+    <button class="bg-gray-800 px-6 py-3 rounded-full text-white mb-6">Filters</button>
+</div>
+
+<div class="mb-6 flex flex-wrap gap-4 items-center">
+    <form method="get" class="flex-1 flex gap-4">
+        <input type="text" name="search" value="@ViewBag.Search" placeholder="Search movies..." 
+               class="flex-1 bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white" />
+        <select name="genre" class="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
+            <option value="">All Genres</option>
+            @foreach (var genre in ViewBag.Genres as List<string> ?? new List<string>())
+            {
+                <option value="@genre" selected="@(ViewBag.Genre == genre)">@genre</option>
+            }
+        </select>
+        <select name="sortBy" class="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white">
+            <option value="date_desc" selected="@(ViewBag.SortBy == "date_desc")">Newest First</option>
+            <option value="date_asc" selected="@(ViewBag.SortBy == "date_asc")">Oldest First</option>
+            <option value="title_asc" selected="@(ViewBag.SortBy == "title_asc")">Title A-Z</option>
+            <option value="title_desc" selected="@(ViewBag.SortBy == "title_desc")">Title Z-A</option>
+        </select>
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white">Search</button>
+    </form>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    @foreach (var movie in Model)
+    {
+        <div class="bg-gray-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-transform cursor-pointer">
+            <a href="/Movies/Details/@movie.Id">
+                @if (!string.IsNullOrEmpty(movie.PosterUrl))
+                {
+                    <div class="aspect-[2/3] bg-gray-700 overflow-hidden">
+                        <img src="@movie.PosterUrl" alt="@movie.Title" class="w-full h-full object-cover" />
+                    </div>
+                }
+                else
+                {
+                    <div class="aspect-[2/3] bg-gray-700 flex items-center justify-center">
+                        <i class="fas fa-film text-6xl text-gray-600"></i>
+                    </div>
+                }
+                <div class="p-4 bg-red-600">
+                    <h3 class="font-bold text-white mb-1">@movie.Title</h3>
+                    <p class="text-sm text-red-100">Premiera: @movie.ReleaseDate.ToString("dd.MM.yyyy")</p>
+                    <i class="fas fa-arrow-right float-right mt-2"></i>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="flex justify-center gap-2">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a href="?page=@i&search=@ViewBag.Search&genre=@ViewBag.Genre&sortBy=@ViewBag.SortBy" 
+               class="px-4 py-2 rounded @(ViewBag.CurrentPage == i ? "bg-red-600" : "bg-gray-800") text-white">
+                @i
+            </a>
+        }
+    </div>
+}
+

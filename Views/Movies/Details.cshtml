@@ -1,0 +1,144 @@
+@model Movie
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div>
+        @if (!string.IsNullOrEmpty(Model.PosterUrl))
+        {
+            <div class="aspect-[2/3] bg-gray-800 rounded-lg overflow-hidden mb-6">
+                <img src="@Model.PosterUrl" alt="@Model.Title" class="w-full h-full object-cover" />
+            </div>
+        }
+        else
+        {
+            <div class="aspect-[2/3] bg-gray-800 rounded-lg flex items-center justify-center mb-6">
+                <i class="fas fa-film text-9xl text-gray-600"></i>
+            </div>
+        }
+    </div>
+    
+    <div>
+        <div class="mb-4">
+            <h1 class="text-4xl font-bold">@Model.Title</h1>
+        </div>
+        
+        <div class="mb-6">
+            <p class="text-gray-400 mb-2">@Model.Genre</p>
+            <p class="text-gray-400 mb-2">@Model.Duration min • @Model.ReleaseDate.ToString("dd.MM.yyyy")</p>
+        </div>
+        
+        @if (!string.IsNullOrEmpty(Model.TrailerUrl))
+        {
+            <div class="mb-4">
+                <a href="@Model.TrailerUrl" target="_blank" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded inline-flex items-center gap-2">
+                    <i class="fas fa-play"></i>
+                    <span>Trailer</span>
+                </a>
+            </div>
+        }
+
+        <div class="bg-red-600/20 border border-red-600 rounded-lg p-4 mb-6">
+            <h3 class="font-bold mb-3">Informacion</h3>
+            <div class="space-y-2 text-sm">
+                <p><strong>Aktorë:</strong> @Model.Actors</p>
+                <p><strong>Regjisori:</strong> @Model.Director</p>
+                <p><strong>Distributor:</strong> @Model.Distributor</p>
+            </div>
+        </div>
+
+        @if (Model.Showtimes != null && Model.Showtimes.Any())
+        {
+            var activeShowtimes = Model.Showtimes
+                .Where(s => s.IsActive && s.ShowDateTime > DateTime.Now)
+                .OrderBy(s => s.ShowDateTime)
+                .ToList();
+                
+            @if (activeShowtimes.Any())
+            {
+                // Group showtimes by location
+                var showtimesByLocation = activeShowtimes
+                    .GroupBy(s => s.CinemaHall?.Name ?? "Unknown")
+                    .OrderBy(g => g.Key)
+                    .ToList();
+                
+                <div class="mb-6">
+                    <h3 class="font-bold mb-4 text-xl">Rezervo Bileten</h3>
+                    
+                    @if (showtimesByLocation.Count > 1)
+                    {
+                        // If more than one location, show as separate cards per location
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @foreach (var locationGroup in showtimesByLocation)
+                            {
+                                <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                                    <h4 class="font-semibold text-white mb-3 text-lg">@locationGroup.Key</h4>
+                                    <div class="space-y-2">
+                                        @foreach (var showtime in locationGroup.OrderBy(s => s.ShowDateTime))
+                                        {
+                                            <a href="/Booking/SelectSeats/@showtime.Id" class="block bg-gray-700 hover:bg-gray-600 rounded-lg p-3 border border-gray-600 transition-all cursor-pointer group">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex-1">
+                                                        <p class="text-sm text-gray-400 mb-1">
+                                                            <i class="fas fa-calendar"></i> @showtime.ShowDateTime.ToString("ddd • MMM dd, yyyy • h:mm tt")
+                                                        </p>
+                                                        <p class="text-sm text-gray-400">
+                                                            <i class="fas fa-video"></i> @showtime.ViewType view
+                                                        </p>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <i class="fas fa-chevron-right text-gray-400 group-hover:text-red-600 transition-colors"></i>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        // Single location - show all showtimes in a list
+                        <div class="space-y-3">
+                            @foreach (var showtime in activeShowtimes)
+                            {
+                                <a href="/Booking/SelectSeats/@showtime.Id" class="block bg-gray-800 hover:bg-gray-700 rounded-lg p-4 border border-gray-700 transition-all cursor-pointer group">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-white mb-1">@Model.Title - @Model.Genre</p>
+                                            <p class="text-sm text-gray-400 mb-1">
+                                                <i class="fas fa-map-marker-alt"></i> @showtime.CinemaHall?.Name
+                                            </p>
+                                            <p class="text-sm text-gray-400 mb-1">
+                                                <i class="fas fa-calendar"></i> @showtime.ShowDateTime.ToString("ddd • MMM dd, yyyy • h:mm tt")
+                                            </p>
+                                            <p class="text-sm text-gray-400">
+                                                <i class="fas fa-video"></i> @showtime.ViewType view
+                                            </p>
+                                        </div>
+                                        <div class="ml-4">
+                                            <i class="fas fa-chevron-right text-gray-400 group-hover:text-red-600 transition-colors"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        }
+
+        <div class="bg-gray-800 rounded-lg p-4 mb-6">
+            <h3 class="font-bold mb-2">Informacion</h3>
+            <p class="text-sm text-gray-400 mb-2">Mund të blihen vetëm online, rezervimet nuk janë të mundura</p>
+            <p class="text-sm text-gray-400">Biletat qe blihen nuk jane te kthyeshme apo te ndryshohen emrat.</p>
+        </div>
+    </div>
+</div>
+
+<div class="mt-8">
+    <h2 class="text-2xl font-bold mb-4">Synopsis</h2>
+    <p class="text-gray-300 leading-relaxed">@Model.Description</p>
+</div>
