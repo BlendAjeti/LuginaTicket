@@ -1,0 +1,53 @@
+@model CreateUserViewModel
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<h1 class="text-3xl font-bold mb-6">Create User</h1>
+
+<form asp-action="Create" method="post" class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    @Html.AntiForgeryToken()
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-4 p-3 bg-red-900/20 border border-red-600 rounded">
+            <div asp-validation-summary="All" class="text-red-400 text-sm"></div>
+        </div>
+    }
+    <div class="mb-4">
+        <label asp-for="Email" class="block text-sm font-medium mb-2 text-white">Email</label>
+        <input asp-for="Email" type="email" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" placeholder="user@example.com" required />
+        <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Password" class="block text-sm font-medium mb-2">Password</label>
+        <input asp-for="Password" type="password" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" placeholder="Minimum 6 characters" required />
+        <span asp-validation-for="Password" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="FirstName" class="block text-sm font-medium mb-2">First Name</label>
+        <input asp-for="FirstName" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" placeholder="First Name" required />
+        <span asp-validation-for="FirstName" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="LastName" class="block text-sm font-medium mb-2">Last Name</label>
+        <input asp-for="LastName" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" placeholder="Last Name" required />
+        <span asp-validation-for="LastName" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Role" class="block text-sm font-medium mb-2">Role</label>
+        <select asp-for="Role" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <span asp-validation-for="Role" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="flex gap-4">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-semibold">Create</button>
+        <a href="/Admin/Users" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white font-semibold">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

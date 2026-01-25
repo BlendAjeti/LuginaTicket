@@ -1,0 +1,57 @@
+@model EditUserViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<h1 class="text-3xl font-bold mb-6">Edit User</h1>
+
+<form asp-action="Edit" method="post" class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    @Html.AntiForgeryToken()
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-4 p-3 bg-red-900/20 border border-red-600 rounded">
+            <div asp-validation-summary="All" class="text-red-400 text-sm"></div>
+        </div>
+    }
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-4">
+        <label asp-for="Email" class="block text-sm font-medium mb-2 text-white">Email</label>
+        <input asp-for="Email" type="email" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+        <span asp-validation-for="Email" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="FirstName" class="block text-sm font-medium mb-2">First Name</label>
+        <input asp-for="FirstName" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+        <span asp-validation-for="FirstName" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label asp-for="LastName" class="block text-sm font-medium mb-2">Last Name</label>
+        <input asp-for="LastName" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+        <span asp-validation-for="LastName" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="mb-4">
+        <label class="flex items-center">
+            <input asp-for="IsActive" type="checkbox" class="mr-2" />
+            <span>Is Active</span>
+        </label>
+    </div>
+    <div class="mb-4">
+        <label asp-for="Role" class="block text-sm font-medium mb-2">Role</label>
+        <select asp-for="Role" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white">
+            @foreach (var role in ViewBag.Roles as List<string> ?? new List<string>())
+            {
+                <option value="@role" selected="@(Model.Role == role)">@role</option>
+            }
+        </select>
+        <span asp-validation-for="Role" class="text-red-500 text-sm"></span>
+    </div>
+    <div class="flex gap-4">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-semibold">Save</button>
+        <a href="/Admin/Users" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white font-semibold">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
