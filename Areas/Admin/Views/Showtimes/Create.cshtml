@@ -1,0 +1,65 @@
+@model Showtime
+@{
+    ViewData["Title"] = "Create Showtime";
+}
+
+<h1 class="text-3xl font-bold mb-6">Create Showtime for: @ViewBag.MovieTitle</h1>
+
+<form asp-action="Create" method="post" class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MovieId" />
+    
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="mb-4 p-3 bg-red-900/20 border border-red-600 rounded">
+            <div asp-validation-summary="All" class="text-red-400 text-sm"></div>
+        </div>
+    }
+    
+    <div class="mb-4">
+        <label asp-for="CinemaHallId" class="block text-sm font-medium mb-2 text-white">Lokacioni (Cinema Hall)</label>
+        <select asp-for="CinemaHallId" asp-items="ViewBag.CinemaHalls" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required>
+            <option value="">-- Zgjidh Lokacionin --</option>
+        </select>
+        <span asp-validation-for="CinemaHallId" class="text-red-500 text-sm"></span>
+    </div>
+    
+    <div class="mb-4">
+        <label asp-for="ShowDateTime" class="block text-sm font-medium mb-2 text-white">Data dhe Ora</label>
+        <input asp-for="ShowDateTime" type="datetime-local" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required />
+        <span asp-validation-for="ShowDateTime" class="text-red-500 text-sm"></span>
+    </div>
+    
+    <div class="mb-4">
+        <label asp-for="ViewType" class="block text-sm font-medium mb-2 text-white">Lloji i Shfaqjes</label>
+        <select asp-for="ViewType" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" required>
+            <option value="2D">2D</option>
+            <option value="3D">3D</option>
+            <option value="IMAX">IMAX</option>
+        </select>
+        <span asp-validation-for="ViewType" class="text-red-500 text-sm"></span>
+    </div>
+    
+    <div class="mb-4">
+        <label asp-for="Price" class="block text-sm font-medium mb-2 text-white">Çmimi (€)</label>
+        <input asp-for="Price" type="number" step="0.01" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white" placeholder="3.20" required />
+        <span asp-validation-for="Price" class="text-red-500 text-sm"></span>
+    </div>
+    
+    <div class="mb-4">
+        <label class="flex items-center">
+            <input asp-for="IsActive" type="checkbox" checked class="mr-2" />
+            <span class="text-white">Is Active</span>
+        </label>
+    </div>
+    
+    <div class="flex gap-4">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-semibold">Create</button>
+        <a href="/Admin/Movies/Details/@ViewBag.MovieId" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white font-semibold">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
