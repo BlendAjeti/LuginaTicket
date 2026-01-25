@@ -1,0 +1,41 @@
+@model UserViewModel
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<h1 class="text-3xl font-bold mb-6">User Details</h1>
+
+<div class="bg-gray-800 rounded-lg p-6 max-w-2xl">
+    <dl class="grid grid-cols-2 gap-4">
+        <dt class="text-gray-400">Username:</dt>
+        <dd class="font-semibold">@Model.UserName</dd>
+        
+        <dt class="text-gray-400">Email:</dt>
+        <dd>@Model.Email</dd>
+        
+        <dt class="text-gray-400">First Name:</dt>
+        <dd>@Model.FirstName</dd>
+        
+        <dt class="text-gray-400">Last Name:</dt>
+        <dd>@Model.LastName</dd>
+        
+        <dt class="text-gray-400">Roles:</dt>
+        <dd>@string.Join(", ", Model.Roles)</dd>
+        
+        <dt class="text-gray-400">Status:</dt>
+        <dd>
+            <span class="px-2 py-1 rounded @(Model.IsActive ? "bg-green-600" : "bg-red-600")">
+                @(Model.IsActive ? "Active" : "Inactive")
+            </span>
+        </dd>
+        
+        <dt class="text-gray-400">Created At:</dt>
+        <dd>@Model.CreatedAt.ToString("MMM dd, yyyy")</dd>
+    </dl>
+    
+    <div class="mt-6 flex gap-4">
+        <a href="/Admin/Users/Edit/@Model.Id" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded">Edit</a>
+        <a href="/Admin/Users" class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded">Back to List</a>
+    </div>
+</div>
+

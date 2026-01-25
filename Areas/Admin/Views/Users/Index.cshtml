@@ -1,0 +1,74 @@
+@model List<UserViewModel>
+@{
+    ViewData["Title"] = "Users";
+}
+
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Users</h1>
+    <a href="/Admin/Users/Create" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded">Create New</a>
+</div>
+
+<div class="mb-4 flex gap-4">
+    <form method="get" class="flex gap-4">
+        <input type="text" name="search" value="@ViewBag.Search" placeholder="Search..." 
+               class="bg-gray-800 border border-gray-700 rounded px-4 py-2" />
+        <select name="role" class="bg-gray-800 border border-gray-700 rounded px-4 py-2">
+            <option value="">All Roles</option>
+            @foreach (var role in ViewBag.Roles as List<string> ?? new List<string>())
+            {
+                <option value="@role" selected="@(ViewBag.Role == role)">@role</option>
+            }
+        </select>
+        <button type="submit" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded">Filter</button>
+    </form>
+</div>
+
+<div class="bg-gray-800 rounded-lg overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-700">
+            <tr>
+                <th class="px-4 py-3 text-left">Username</th>
+                <th class="px-4 py-3 text-left">Email</th>
+                <th class="px-4 py-3 text-left">Name</th>
+                <th class="px-4 py-3 text-left">Role</th>
+                <th class="px-4 py-3 text-left">Status</th>
+                <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr class="border-t border-gray-700">
+                    <td class="px-4 py-3">@user.UserName</td>
+                    <td class="px-4 py-3">@user.Email</td>
+                    <td class="px-4 py-3">@user.FirstName @user.LastName</td>
+                    <td class="px-4 py-3">@string.Join(", ", user.Roles)</td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-1 rounded @(user.IsActive ? "bg-green-600" : "bg-red-600")">
+                            @(user.IsActive ? "Active" : "Inactive")
+                        </span>
+                    </td>
+                    <td class="px-4 py-3">
+                        <a href="/Admin/Users/Details/@user.Id" class="text-blue-400 hover:underline mr-2">Details</a>
+                        <a href="/Admin/Users/Edit/@user.Id" class="text-yellow-400 hover:underline mr-2">Edit</a>
+                        <a href="/Admin/Users/Delete/@user.Id" class="text-red-400 hover:underline">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="flex justify-center gap-2 mt-4">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a href="?page=@i&search=@ViewBag.Search&role=@ViewBag.Role" 
+               class="px-4 py-2 rounded @(ViewBag.CurrentPage == i ? "bg-red-600" : "bg-gray-800")">
+                @i
+            </a>
+        }
+    </div>
+}
+
